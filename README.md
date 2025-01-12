@@ -1,80 +1,43 @@
-# VSNE Career Mentor Bot
+# VSNE Career Mentor Bot 🚀
 
-**VSNE** is a career mentor chatbot designed to provide personalized career guidance. Using advanced AI and web scraping techniques, it offers tailored recommendations for career paths, courses, companies, and internship opportunities.
+Welcome to the **VSNE Career Mentor Bot** repository! This project was built during the NoSu AI Hackathon by a team of four passionate developers to create an AI-powered career mentor. The bot is designed to guide users toward their ideal career paths, offering tailored roadmaps and resources. 🌟
 
 This is for the 2025 nosu hackathon! A team of four baddies in tech made this project come to life!
----
 
-## Features
+## Features ✨
+- **Personalized Career Roadmap** 🗺️: A step-by-step guide to achieving your dream career, with actionable steps and course links.
+- **Interactive Chat with Sage** 💬: Get advice and insights from Sage, our AI-powered chat assistant.
+- **User-Friendly Interface** 🎨: A clean and modern design for seamless navigation.
+- **Dark Mode Support** 🌙: Switch between light and dark themes to suit your preference.
 
-### Core Functionalities
-1. **Interactive Q&A**: Engage in conversations to understand the user's background, interests, experience(if any) and skills.
+## Pages 📄
+### 1. Home Page 🏠
+- Overview of the bot and its capabilities.
+- Steps on how to use the platform.
+- Call-to-action buttons to get started or learn more.
 
-2. **Personalized Roadmap**:
-   - Suggests career paths.
-   - Recommends online courses and learning resources.
+### 2. User-Input Page 📝
+- Collects user information like name, interests, current skills, and career goals.
+- Provides a seamless way to start the personalized experience.
 
-3. **Internship Finder**: Scrape and display relevant internship opportunities.
+### 3. Roadmap Page 🛤️
+- Displays the most recommended career path based on user input.
+- Features a dynamic roadmap with 10 color-coded pointers for actionable steps.
+- Each step includes an explanation and a link to relevant courses or resources.
+- Includes interactive guidance from Sage to help users along the way.
 
-4. **Chatbot**: For Q&A interactions.
----
+## Technology Stack 🛠️
+- **Frontend:** React, Tailwind CSS
+- **Backend:** Flask, SQLAlchemy
+- **AI/ML:** OpenAI API for conversational intelligence
+- **Database:** SQLite
+- **Additional Tools:** HTML, CSS, JavaScript
 
-## User Flow
-1. **Welcome Screen**
-- Introduce the bot’s purpose and what users can expect.
-
-2. **Input Form**
-- Users fill out their details: Skills, interests, education, etc.
-
-3. **Display Roadmap**
-- Provide:
-  - Suggested roles with descriptions.
-  - Links to relevant courses and learning resources.
-
-4. **Chatbot Interaction**
-- Allow users to ask follow-up questions about roles, skills, or industries.
-
----
-
-## Tech Stack
-
-### **Frontend**
-- **React**: For creating a sleek and interactive chat interface.
-- **Axios**: For API calls.
-
-### **Backend**
-- **Flask**: To handle API requests and integrate backend logic.
-- **SQL**: To manage user data, chat logs, and recommendation history.
-
-### **AI Component**
-- **OpenAI API**: Powers conversational logic and personalized recommendations.
-
-### **Web Scraping**
-- **Python**: To fetch internship opportunities and LinkedIn profiles.
-
-### **AI/ML**
-- Model: OpenAI GPT API for:
-- Role and resource recommendations.
-- Career Q&A chatbot.
-
-### **Hosting**
+### **Hosting** ▶️
 - Frontend: Netlify or Vercel for React app.
 - Backend: Render or Heroku for Flask/Node.js API.
 
----
-
-## Project Roles
-
-### Team Members
-- **Nic**: AI Component (Flask, OpenAI API).
-- **Ewa**: Frontend Development (React).
-- **Sab**: Backend Development (Flask, SQL).
-- **Vee**: Web Scraping (Internships and LinkedIn profiles).
-
----
-
-## Future Enhancements
-
+## Future Improvements 🚧
 1. **Advanced AI Capabilities**:
    - More in-depth career path analysis.
    - Real-time user feedback integration.
@@ -85,3 +48,15 @@ This is for the 2025 nosu hackathon! A team of four baddies in tech made this pr
    - Upload a resume to receive:
    - Skill gaps for target roles: Basic improvement tips (e.g., adding action verbs or quantifying achievements).
    - Save Progress/History: Enable users to save their profile and revisit recommendations or chat history.
+4. Expand roadmap steps to include more detailed suggestions.
+5. Incorporate gamification elements for user engagement.
+
+## Team 👩‍💻👨‍💻
+- **Nic:** AI integration and Flask API development.
+- **Ewa:** Frontend development and design.
+- **Sab:** Backend development and database management.
+- **Vee:** Web scraping for internships and LinkedIn profiles.
+
+---
+
+Thank you for checking out the VSNE Career Mentor Bot! 🌈 If you have any questions or feedback, please feel free to reach out. Let’s help you take the next step in your career journey! 💼✨
