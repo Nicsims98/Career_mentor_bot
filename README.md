@@ -27,7 +27,7 @@ This is for the 2025 nosu hackathon! A team of four baddies in tech made this pr
 - Includes interactive guidance from Sage to help users along the way.
 
 ## Technology Stack 🛠️
-- **Frontend:** React, Tailwind CSS
+- **Frontend:** React, Vanilla CSS
 - **Backend:** Flask, SQLAlchemy
 - **AI/ML:** OpenAI API for conversational intelligence
 - **Database:** SQLite
@@ -48,7 +48,8 @@ This is for the 2025 nosu hackathon! A team of four baddies in tech made this pr
    - Upload a resume to receive:
    - Skill gaps for target roles: Basic improvement tips (e.g., adding action verbs or quantifying achievements).
    - Save Progress/History: Enable users to save their profile and revisit recommendations or chat history.
-4. Expand roadmap steps to include more detailed suggestions.
+4. **Internship Finder**
+   - Find potential internships for user to apply to.
 5. Incorporate gamification elements for user engagement.
 
 ## Team 👩‍💻👨‍💻
