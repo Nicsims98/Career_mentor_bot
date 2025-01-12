@@ -1,0 +1,51 @@
+:root {
+  /* Dark Theme */
+  --dark-background: #2d1b36;  /* Deep purple */
+  --dark-header: #9d8ba5;      /* Muted lavender */
+  --dark-text-primary: #c2d6bc;  /* Soft sage green */
+  --dark-text-secondary: #e6c3d7;  /* Soft-pinkish purple */
+  --dark-hover: #ff9eaf;       /* Warm pink */
+  --dark-bubble-sage: #8b7a9c;  /* Muted purple tone */
+  --dark-bubble-user: #9d8ba5;  /* Muted lavender */
+  --dark-card-bg: #4a3654;     /* Muted purple */
+  --dark-card-text: #c2d6bc;   /* Soft sage green */
+  --dark-accent: #6b4f7b;      /* Links/button color */
+
+  /* Light Theme */
+  --light-background: #c2d6bc;  /* Soft sage green */
+  --light-header: #9d8ba5;     /* Muted lavender */
+  --light-text-primary: #2d1b36;  /* Deep purple */
+  --light-text-secondary: #4a3654;  /* Slightly lighter purple */
+  --light-hover: #ff9eaf;      /* Warm pink */
+  --light-bubble-sage: #e6c3d7;  /* Soft pinkish-purple */
+  --light-bubble-user: #b5b0b8;  /* Light lavender-grey */
+  --light-card-bg: #b5b0b8;    /* Light lavender grey */
+  --light-card-text: #2d1b36;  /* Deep-purple */
+  --light-accent: #df8ba7;     /* Links/button color */
+
+  /* Default theme (dark) */
+  --background: var(--dark-background);
+  --header: var(--dark-header);
+  --text-primary: var(--dark-text-primary);
+  --text-secondary: var(--dark-text-secondary);
+  --hover: var(--dark-hover);
+  --bubble-sage: var(--dark-bubble-sage);
+  --bubble-user: var(--dark-bubble-user);
+  --card-bg: var(--dark-card-bg);
+  --card-text: var(--dark-card-text);
+  --accent: var(--dark-accent);
+}
+
+/* Light theme class */
+.light-theme {
+  --background: var(--light-background);
+  --header: var(--light-header);
+  --text-primary: var(--light-text-primary);
+  --text-secondary: var(--light-text-secondary);
+  --hover: var(--light-hover);
+  --bubble-sage: var(--light-bubble-sage);
+  --bubble-user: var(--light-bubble-user);
+  --card-bg: var(--light-card-bg);
+  --card-text: var(--light-card-text);
+  --accent: var(--light-accent);
+}
