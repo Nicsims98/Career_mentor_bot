@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
+const axios = require('axios');
+const cheerio = require('cheerio');
 require('dotenv').config();
 
 // Scraper Function for Multiple Sites
@@ -15,7 +17,6 @@ async function scrapeInternships(userInterests) {
 
     try {
         for (const site of sites) {
-            // Modify URL to include search terms from user interests
             const searchUrl = addSearchParams(site, userInterests);
             const { data } = await axios.get(searchUrl);
             const $ = cheerio.load(data);
@@ -26,11 +27,7 @@ async function scrapeInternships(userInterests) {
                 const link = $(element).find('a').attr('href');
                 const postedDate = $(element).find('.posted-date').text().trim();
                 
-                // Check if opportunity is from last 48 hours
-                const isRecent = isWithinLast48Hours(postedDate);
-                
-                // Only add if the opportunity matches user interests and is recent
-                if (isRecent && matchesUserInterests(title + ' ' + description, userInterests)) {
+                if (isWithinLast48Hours(postedDate) && matchesUserInterests(title + ' ' + description, userInterests)) {
                     opportunities.push({ title, link });
                 }
             });
@@ -42,7 +39,7 @@ async function scrapeInternships(userInterests) {
     return opportunities;
 }
 
-// Helper function to add search parameters to URLs
+// Helper Functions
 function addSearchParams(url, interests) {
     const searchTerms = interests.join(' OR ');
     
@@ -53,19 +50,14 @@ function addSearchParams(url, interests) {
     } else if (url.includes('coursera.org')) {
         return `${url}&query=${encodeURIComponent(searchTerms)}`;
     }
-    // Add more site-specific URL modifications as needed
     return url;
 }
 
-// Helper function to check if text matches any user interests
 function matchesUserInterests(text, interests) {
     text = text.toLowerCase();
-    return interests.some(interest => 
-        text.includes(interest.toLowerCase())
-    );
+    return interests.some(interest => text.includes(interest.toLowerCase()));
 }
 
-// Helper function to check if posting is within last 48 hours
 function isWithinLast48Hours(dateString) {
     if (!dateString) return false;
     const postDate = new Date(dateString);
@@ -74,7 +66,7 @@ function isWithinLast48Hours(dateString) {
     return diffHours <= 48;
 }
 
-// Add email configuration
+// Email Configuration
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -83,51 +75,50 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Add function to fetch users (after your existing scraping functions)
+// Fetch Users
 async function getUsers() {
     try {
-        const response = await fetch('http://localhost:5000/api/users');
-        return await response.json();
+        const response = await axios.get('http://localhost:5000/api/users');
+        return response.data;
     } catch (error) {
         console.error('Error fetching users:', error);
         return [];
     }
 }
 
-// Update your existing sendEmails function
+// Send Emails
 async function sendEmails() {
     try {
         const users = await getUsers();
 
         for (const user of users) {
-            // Get opportunities specific to this user's interests
-            const opportunities = await scrapeInternships(user.interests.split(','));
+            const interests = user.interests ? user.interests.split(',') : [];
+            const opportunities = await scrapeInternships(interests);
             
             if (opportunities.length === 0) continue;
 
             const htmlContent = `
                 <h3>Hi ${user.name},</h3>
-                <p>Here are some new internship opportunities from the last 48 hours matching your interests (${user.interests}):</p>
+                <p>Here are some new opportunities matching your interests:</p>
                 <ul>${opportunities.map(op => `<li><a href="${op.link}">${op.title}</a></li>`).join('')}</ul>
                 <p>Happy hunting!</p>`;
 
             await transporter.sendMail({
                 from: process.env.EMAIL_USER,
                 to: user.email,
-                subject: 'New Internship Opportunities',
+                subject: 'New Career Opportunities',
                 html: htmlContent
             });
+            
+            console.log(`Email sent to ${user.email}`);
         }
-
-        console.log("Emails sent successfully.");
     } catch (error) {
         console.error("Error sending emails:", error);
     }
 }
 
-// Schedule Emails Every Other Day
-cron.schedule('0 9 * * *', sendEmails); // Runs at 9 AM every day
+// Schedule Emails
+cron.schedule('0 9 * * *', sendEmails);
 
-// Start Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Export for testing
+module.exports = { sendEmails, scrapeInternships };
