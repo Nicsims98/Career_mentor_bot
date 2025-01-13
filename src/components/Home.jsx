@@ -31,7 +31,7 @@ function Home(){
                             Sage provides personalized advice and structured roadmaps tailored to your goals.
                         </p>
 
-                        <h2>How to Use This Website</h2>
+                        <h2>How to Use VSNE</h2>
                         <ol className="steps-list">
                             <li>
                                 <strong>Create Your Profile:</strong> Start by visiting the User Input page to tell us about 

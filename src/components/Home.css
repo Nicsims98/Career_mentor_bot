@@ -46,7 +46,7 @@
     background: var(--bubble-sage);
     border-radius: 1rem;
     padding: 1rem;
-    max-width: 200px;
+    max-width: 300px;
     top: 20px;
     right: -20px;
     color: var(--text-primary);

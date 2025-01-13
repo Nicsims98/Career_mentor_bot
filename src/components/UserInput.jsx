@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './PageStyles.css'
 import './UserInput.css'
 
 function UserInput() {
+  const [showVideo, setShowVideo] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setShowVideo(true);
+  };
   return (
     <div className="page-container">
       <h2>User Profile</h2>
-      <form className="user-form">
+      <form className="user-form" onSubmit={handleSubmit}>
+
         {/* Personal Information Section */}
         <div className="form-section">
           <h3>Personal Information</h3>
@@ -115,6 +122,25 @@ function UserInput() {
 
         <button type="submit" className="submit-btn">Submit</button>
       </form>
+
+      {showVideo && (
+        <div className="video-modal-overlay">
+          <div className="video-modal">
+            <button 
+              className="close-button"
+              onClick={() => setShowVideo(false)}
+            >
+              ×
+            </button>
+            <video 
+              controls 
+              autoPlay
+              src="/src/images/nethenoob vid.mp4"
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
