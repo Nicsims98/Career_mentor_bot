@@ -3,10 +3,7 @@ import './PageStyles.css'
 import './UserInput.css'
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap';
-<<<<<<< HEAD
-=======
-
->>>>>>> cb87f0998de2aa48cbba604700342eea87b0c3c9
+import spinningCatVideo from '../images/nethenoob vid.mp4';
 
 function UserInput() {
   const [selectedInterest, setSelectedInterest] = useState('');
@@ -25,15 +22,15 @@ function UserInput() {
     console.log('User Profile Data:', userData);
 
     // Show video
-  setShowVideo(true);
-  // Navigate after delay
-  setTimeout(() => {
-    if (selectedInterest) {
-      // Navigate to "coming soon" for "other", regular roadmap for specific interests
-      const path = selectedInterest === 'other' ? '/roadmap?type=coming-soon' : `/roadmap?type=${selectedInterest}`;
-      navigate(path);
-    }
-  }, 3000);
+    setShowVideo(true);
+    // Navigate after delay
+    setTimeout(() => {
+      if (selectedInterest) {
+        // Navigate to "coming soon" for "other", regular roadmap for specific interests
+        const path = selectedInterest === 'other' ? '/roadmap?type=coming-soon' : `/roadmap?type=${selectedInterest}`;
+        navigate(path);
+      }
+    }, 3000);
     
     // You can add API call here later to send data to backend
     alert('Profile submitted successfully!');
@@ -49,9 +46,14 @@ function UserInput() {
     setSelectedInterest(''); // Reset the interest selection state
   };
 
+  const handleSpinningCatClick = () => {
+    setShowVideo(true);
+  };
+
   return (
     <div className="user-input-container">
-      <form onSubmit={handleSubmit}>
+      <h2 className="profile-heading">USER PROFILE</h2>
+      <form onSubmit={handleSubmit} className="user-form">
         <div className="form-section">
           <h3>Personal Information</h3>
           <div className="form-group">
@@ -61,6 +63,17 @@ function UserInput() {
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input type="email" id="email" name="email" required />
+          </div>
+          <div className="form-group">
+            <label htmlFor="age">Age</label>
+            <input 
+              type="number" 
+              id="age" 
+              name="age" 
+              min="10" 
+              max="100" 
+              required 
+            />
           </div>
         </div>
 
@@ -74,6 +87,15 @@ function UserInput() {
               <option value="partTime">Part-time</option>
               <option value="freelance">Freelance</option>
               <option value="student">Student</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="jobPreference">Job Preference</label>
+            <select id="jobPreference" name="jobPreference" required>
+              <option value="">Select job preference</option>
+              <option value="remote">Remote</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="onsite">On-site</option>
             </select>
           </div>
         </div>
@@ -113,14 +135,29 @@ function UserInput() {
                 name="otherInterest"
                 placeholder="Please specify your interest"
                 className="other-interest-input"
-                style={{ marginTop: '10px' }}
               />
             )}
           </div>
         </div>
 
-        <button type="submit" className="submit-button">Submit</button>
+        <button type="submit" className="submit-btn">Submit</button>
       </form>
+
+      <button onClick={handleSpinningCatClick} className="spinning-cat-btn">
+        Spinning Cat
+      </button>
+
+      {showVideo && (
+        <div className="video-modal-overlay">
+          <div className="video-modal">
+            <button className="close-button" onClick={() => setShowVideo(false)}>×</button>
+            <video autoPlay muted>
+              <source src={spinningCatVideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      )}
 
       {showRoadmap && selectedInterest && selectedInterest !== 'other' && (
         <Roadmap type={selectedInterest} />
