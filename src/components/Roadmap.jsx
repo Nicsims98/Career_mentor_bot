@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Roadmap.css'
 
 function Roadmap() {
@@ -85,24 +85,39 @@ function Roadmap() {
 
       {/* Roadmap Cards */}
       <div className="roadmap-cards">
-        {roadmapSteps.map((step, index) => (
-          <a 
-            key={index}
-            href={step.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="roadmap-card"
-            style={{ borderColor: step.color }}
-          >
-            <span className="step-number" style={{ backgroundColor: step.color }}>
-              {index + 1}
-            </span>
-            <div className="card-content">
-              <p>{step.text}</p>
-              <div className="card-description">{step.description}</div>
+        {roadmapSteps.map((step, index) => {
+          const [isExpanded, setIsExpanded] = useState(false);
+          
+          return (
+            <div 
+              key={index}
+              className={`roadmap-card ${isExpanded ? 'expanded' : ''}`}
+              onClick={() => setIsExpanded(!isExpanded)}
+              style={{ borderColor: step.color }}
+            >
+              <span className="step-number" style={{ backgroundColor: step.color }}>
+                {index + 1}
+              </span>
+              <div className="card-content">
+                <p>{step.text}</p>
+                {isExpanded && (
+                  <>
+                    <div className="card-description">{step.description}</div>
+                    <a 
+                      href={step.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="card-link"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Learn More →
+                    </a>
+                  </>
+                )}
+              </div>
             </div>
-          </a>
-        ))}
+          );
+        })}
       </div>
     </div>
   )

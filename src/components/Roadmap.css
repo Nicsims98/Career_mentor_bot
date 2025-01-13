@@ -4,6 +4,12 @@
     margin: 0 auto;
 }
 
+@media (max-width: 768px) {
+    .roadmap-container {
+        padding: 3.5rem 1rem 1rem;
+    }
+}
+
 .career-title {
     text-align: center;
     color: var(--text-primary);
@@ -93,12 +99,34 @@
 }
 
 .card-description {
-    display: none;
     margin-top: 1rem;
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
 
-.roadmap-card:hover .card-description {
-    display: block;
+.card-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.card-link:hover {
+    text-decoration: underline;
+}
+
+.roadmap-card {
+    cursor: pointer;
+}
+
+@media (min-width: 769px) {
+    /* Keep hover behavior for desktop */
+    .card-description {
+        display: none;
+    }
+    
+    .roadmap-card:hover .card-description {
+        display: block;
+    }
 }
