@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 import './Roadmap.css'
 
 const Roadmap = ({ type }) => {
@@ -97,6 +98,10 @@ const Roadmap = ({ type }) => {
       {getRoadmapContent()}
     </div>
   );
+};
+
+Roadmap.propTypes = {
+  type: PropTypes.string.isRequired, // Define the type prop as a required string
 };
 
 export default Roadmap;
