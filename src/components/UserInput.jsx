@@ -4,6 +4,7 @@ import './UserInput.css'
 
 function UserInput() {
   const [showVideo, setShowVideo] = useState(false);
+  const [selectedInterest, setSelectedInterest] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -62,13 +63,32 @@ function UserInput() {
           </div>
           
           <div className="form-group">
-            <label htmlFor="interests">Interests</label>
-            <textarea 
+            <label htmlFor="interests">Primary Interest</label>
+            <select 
               id="interests" 
-              name="interests" 
-              placeholder="Enter your interests (e.g., Web Development, AI, Data Science)"
-              rows="3"
-            ></textarea>
+              name="interests"
+              value={selectedInterest}
+              onChange={(e) => setSelectedInterest(e.target.value)}
+            >
+              <option value="">Select your primary interest</option>
+              <option value="software">Software Development</option>
+              <option value="data">Data Analytics</option>
+              <option value="uiux">UI/UX Design</option>
+              <option value="project">Project Management</option>
+              <option value="finance">Finance</option>
+              <option value="marketing">Marketing</option>
+              <option value="other">Other</option>
+            </select>
+            {selectedInterest === 'other' && (
+              <input
+                type="text"
+                id="otherInterest"
+                name="otherInterest"
+                placeholder="Please specify your interest"
+                className="other-interest-input"
+                style={{ marginTop: '10px' }}
+              />
+            )}
           </div>
         </div>
 
