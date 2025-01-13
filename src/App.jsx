@@ -1,5 +1,4 @@
 import { Routes, Route, useSearchParams } from 'react-router-dom';
-import { Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Home from './components/Home'
 import Header from './components/Header'
@@ -42,13 +41,18 @@ function App() {
 // Create a wrapper component to handle the URL parameters
 function RoadmapWrapper() {
   const [searchParams] = useSearchParams();
-  const type = searchParams.get('type');
-
-  if (!type || !['data', 'software', 'uiux', 'project'].includes(type)) {
-    return <div>Please select an interest type first</div>;
+  let type = searchParams.get('type');
+  
+  if (type === 'coming-soon') {
+    return (
+      <div className="roadmap-container">
+        <h2>Roadmap Coming Soon!</h2>
+        <p>We're working on creating more learning paths. Check back later!</p>
+      </div>
+    );
   }
 
-  return <Roadmap type={type} />;
+  return <Roadmap type={type || 'software'} />;
 }
 
 export default App;
