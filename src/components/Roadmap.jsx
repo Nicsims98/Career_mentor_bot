@@ -55,7 +55,7 @@ const Roadmap = ({ type }) => {
 
   const getRoadmapContent = () => {
     const steps = roadmapData[type];
-    if (!steps) return <div>Invalid roadmap type</div>;
+    if (!steps) return <div className='no-roadmap'>Invalid roadmap type</div>;
 
     const titles = {
       data: "Data Analytics Roadmap",

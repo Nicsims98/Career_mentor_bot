@@ -120,6 +120,16 @@
     cursor: pointer;
 }
 
+.no-roadmap {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    margin: 2rem auto;
+    text-align: center;
+}
+
 @media (min-width: 769px) {
     /* Keep hover behavior for desktop */
     .card-description {
