@@ -1,5 +1,6 @@
 import React from 'react'
-import './Roadmap.css'
+import PropTypes from 'prop-types';
+import './Roadmap.css';
 
 const Roadmap = ({ type }) => {
   const roadmapData = {
@@ -40,22 +41,22 @@ const Roadmap = ({ type }) => {
       { text: "Build a Portfolio", link: "https://www.behance.net/onboarding" }
     ],
     project: [
-      "Understand Project Management Basics",
-      "Master Project Management Methodologies",
-      "Learn Task & Resource Management",
-      "Master Communication Skills",
-      "Learn Risk Management",
-      "Focus on Budget & Cost Management",
-      "Understand Quality Management",
-      "Track & Report Project Progress",
-      "Get Certified",
-      "Lead a Real Project"
+      { text: "Understand Project Management Basics", link: "https://www.coursera.org/learn/project-management-foundations" },
+      { text: "Master Project Management Methodologies", link: "https://www.pmi.org/learning/library/agile-waterfall-methodology-approach-9131" },
+      { text: "Learn Task & Resource Management", link: "https://www.linkedin.com/learning/project-management-foundations-projects-goals-and-stakeholders" },
+      { text: "Master Communication Skills", link: "https://www.coursera.org/learn/project-management-communication" },
+      { text: "Learn Risk Management", link: "https://www.projectmanager.com/blog/risk-management-process-steps" },
+      { text: "Focus on Budget & Cost Management", link: "https://www.pmi.org/learning/library/cost-management-techniques-7624" },
+      { text: "Understand Quality Management", link: "https://www.mindtools.com/pages/article/newPPM_99.htm" },
+      { text: "Track & Report Project Progress", link: "https://www.atlassian.com/work-management/project-management/project-tracking" },
+      { text: "Get Certified", link: "https://www.pmi.org/certifications/project-management-pmp" },
+      { text: "Lead a Real Project", link: "https://www.projectmanager.com/blog/how-to-manage-your-first-project" }
     ]
   };
 
   const getRoadmapContent = () => {
     const steps = roadmapData[type];
-    if (!steps) return <div className='no-roadmap'>Invalid roadmap type</div>;
+    if (!steps) return <div>Invalid roadmap type</div>;
 
     const titles = {
       data: "Data Analytics Roadmap",
@@ -67,23 +68,19 @@ const Roadmap = ({ type }) => {
     return (
       <div className="roadmap-section">
         <h3>{titles[type]}</h3>
-        <div className="roadmap-steps">
+        <div className="cards-container">
           {steps.map((step, index) => (
-            <div key={index} className="roadmap-step">
+            <div key={index} className="card roadmap-step">
               <div className="step-number">{index + 1}</div>
               <div className="step-content">
-                {step.link ? (
-                  <a 
-                    href={step.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="step-link"
-                  >
-                    {step.text}
-                  </a>
-                ) : (
-                  step.text || step
-                )}
+                <a 
+                  href={step.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="step-link"
+                >
+                  {step.text}
+                </a>
               </div>
             </div>
           ))}
@@ -97,6 +94,10 @@ const Roadmap = ({ type }) => {
       {getRoadmapContent()}
     </div>
   );
+};
+
+Roadmap.propTypes = {
+  type: PropTypes.oneOf(['data', 'software', 'uiux', 'project']).isRequired
 };
 
 export default Roadmap;

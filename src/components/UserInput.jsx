@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 import './PageStyles.css'
 import './UserInput.css'
+import { useNavigate } from 'react-router-dom';
+import Roadmap from './Roadmap';
+import { useNavigate } from 'react-router-dom';
 
 function UserInput() {
-  const [showVideo, setShowVideo] = useState(false);
   const [selectedInterest, setSelectedInterest] = useState('');
+  const [showRoadmap, setShowRoadmap] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -13,59 +18,52 @@ function UserInput() {
     const formData = new FormData(e.target);
     const userData = Object.fromEntries(formData.entries());
     
-    // Log the collected data (for now)
+    // Log the collected data
     console.log('User Profile Data:', userData);
     
     // You can add API call here later to send data to backend
     alert('Profile submitted successfully!');
+
+    if (selectedInterest && selectedInterest !== 'other') {
+      setShowRoadmap(true);
+      // Navigate to roadmap page with the selected interest
+      navigate(`/roadmap?type=${selectedInterest}`);
+    }
     
     // Optionally clear the form
     e.target.reset();
+    setSelectedInterest(''); // Reset the interest selection state
   };
 
-  const handleSpinningCat = () => {
-    setShowVideo(true);
-  };
   return (
-    <div className="page-container">
-      <h2>User Profile</h2>
-      <form className="user-form" onSubmit={handleSubmit}>
-
-        {/* Personal Information Section */}
+    <div className="user-input-container">
+      <form onSubmit={handleSubmit}>
         <div className="form-section">
           <h3>Personal Information</h3>
           <div className="form-group">
-            <label htmlFor="name">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="Enter your full name" />
+            <label htmlFor="name">Name</label>
+            <input type="text" id="name" name="name" required />
           </div>
-
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email address" />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="age">Age</label>
-            <input type="number" id="age" name="age" placeholder="Enter your age" min="10" max="100" />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="workType">Preferred Work Type</label>
-            <select id="workType" name="workType">
-              <option value="">Select work type</option>
-              <option value="remote">Remote</option>
-              <option value="hybrid">Hybrid</option>
-              <option value="onsite">On-site</option>
-            </select>
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="location">Location</label>
-            <input type="text" id="location" name="location" placeholder="Enter your location" />
+            <input type="email" id="email" name="email" required />
           </div>
         </div>
 
-        {/* Skills and Interests Section */}
+        <div className="form-section">
+          <h3>Professional Information</h3>
+          <div className="form-group">
+            <label htmlFor="workType">Work Type</label>
+            <select id="workType" name="workType" required>
+              <option value="">Select work type</option>
+              <option value="fullTime">Full-time</option>
+              <option value="partTime">Part-time</option>
+              <option value="freelance">Freelance</option>
+              <option value="student">Student</option>
+            </select>
+          </div>
+        </div>
+
         <div className="form-section">
           <h3>Skills & Interests</h3>
           <div className="form-group">
@@ -85,14 +83,13 @@ function UserInput() {
               name="interests"
               value={selectedInterest}
               onChange={(e) => setSelectedInterest(e.target.value)}
+              required
             >
               <option value="">Select your primary interest</option>
               <option value="software">Software Development</option>
               <option value="data">Data Analytics</option>
               <option value="uiux">UI/UX Design</option>
               <option value="project">Project Management</option>
-              <option value="finance">Finance</option>
-              <option value="marketing">Marketing</option>
               <option value="other">Other</option>
             </select>
             {selectedInterest === 'other' && (
@@ -108,84 +105,14 @@ function UserInput() {
           </div>
         </div>
 
-        {/* Education and Experience Section */}
-        <div className="form-section">
-          <h3>Education & Experience</h3>
-          <div className="form-group">
-            <label htmlFor="education">Education</label>
-            <textarea 
-              id="education" 
-              name="education" 
-              placeholder="Enter your educational background"
-              rows="3"
-            ></textarea>
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="experience">Work Experience</label>
-            <textarea 
-              id="experience" 
-              name="experience" 
-              placeholder="Enter your work experience (if any)"
-              rows="3"
-            ></textarea>
-          </div>
-        </div>
-
-        {/* Career Goals Section */}
-        <div className="form-section">
-          <h3>Career Goals</h3>
-          <div className="form-group">
-            <label htmlFor="shortTerm">Short-term Goals</label>
-            <textarea 
-              id="shortTerm" 
-              name="shortTerm" 
-              placeholder="Enter your short-term career goals"
-              rows="3"
-            ></textarea>
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="longTerm">Long-term Goals</label>
-            <textarea 
-              id="longTerm" 
-              name="longTerm" 
-              placeholder="Enter your long-term career goals"
-              rows="3"
-            ></textarea>
-          </div>
-        </div>
-
-        <button type="submit" className="submit-btn">Submit</button>
+        <button type="submit" className="submit-button">Submit</button>
       </form>
-      
-      <button 
-        onClick={handleSpinningCat} 
-        className="spinning-cat-btn"
-      >
-        Spinning Cat
-      </button>
 
-      {showVideo && (
-        <div className="video-modal-overlay">
-          <div className="video-modal">
-            <button 
-              className="close-button"
-              onClick={() => setShowVideo(false)}
-            >
-              ×
-            </button>
-            <video 
-              controls 
-              autoPlay
-              src="/src/images/nethenoob vid.mp4"
-              style={{ width: '100%', height: 'auto' }}
-            />
-          </div>
-        </div>
+      {showRoadmap && selectedInterest && selectedInterest !== 'other' && (
+        <Roadmap type={selectedInterest} />
       )}
     </div>
-  )
+  );
 }
 
-export default UserInput
+export default UserInput;

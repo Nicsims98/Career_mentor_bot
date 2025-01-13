@@ -1,3 +1,4 @@
+import { Routes, Route, useSearchParams } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Home from './components/Home'
@@ -26,11 +27,28 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/userinput" element={<UserInput />} />
-        <Route path="/roadmap" element={<Roadmap />} />
+        <Route 
+          path="/roadmap" 
+          element={
+            <RoadmapWrapper />
+          } 
+        />
         <Route path="/chatbox" element={<Chatbox />} />
       </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+// Create a wrapper component to handle the URL parameters
+function RoadmapWrapper() {
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get('type');
+
+  if (!type || !['data', 'software', 'uiux', 'project'].includes(type)) {
+    return <div>Please select an interest type first</div>;
+  }
+
+  return <Roadmap type={type} />;
+}
+
+export default App;
