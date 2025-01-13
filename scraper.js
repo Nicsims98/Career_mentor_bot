@@ -1,3 +1,7 @@
+const nodemailer = require('nodemailer');
+const cron = require('node-cron');
+require('dotenv').config();
+
 // Scraper Function for Multiple Sites
 async function scrapeInternships(userInterests) {
     const sites = [
@@ -70,29 +74,40 @@ function isWithinLast48Hours(dateString) {
     return diffHours <= 48;
 }
 
-//  Email Sender Function
+// Add email configuration
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+// Add function to fetch users (after your existing scraping functions)
+async function getUsers() {
+    try {
+        const response = await fetch('http://localhost:5000/api/users');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        return [];
+    }
+}
+
+// Update your existing sendEmails function
 async function sendEmails() {
     try {
-        const result = await pool.query('SELECT * FROM users');
-        const users = result.rows;
+        const users = await getUsers();
 
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
-        });
-
-        // Send personalized emails to each user
         for (const user of users) {
             // Get opportunities specific to this user's interests
-            const opportunities = await scrapeInternships(user.interests);
+            const opportunities = await scrapeInternships(user.interests.split(','));
             
             if (opportunities.length === 0) continue;
 
-            const htmlContent = `<h3>Hi ${user.name},</h3>
-                <p>Here are some new internship opportunities from the last 48 hours matching your interests (${user.interests.join(', ')}):</p>
+            const htmlContent = `
+                <h3>Hi ${user.name},</h3>
+                <p>Here are some new internship opportunities from the last 48 hours matching your interests (${user.interests}):</p>
                 <ul>${opportunities.map(op => `<li><a href="${op.link}">${op.title}</a></li>`).join('')}</ul>
                 <p>Happy hunting!</p>`;
 
