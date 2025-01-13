@@ -25,6 +25,13 @@ body {
   min-height: 100vh;
   background-color: var(--background);
   color: var(--text-primary);
+  -webkit-text-size-adjust: 100%; /* Prevents iOS font scaling */
+}
+
+/* Add viewport meta tag styles */
+@viewport {
+  width: device-width;
+  initial-scale: 1;
 }
 
 h1 {

@@ -30,6 +30,25 @@
   transition: transform 0.3s ease;
 }
 
+@media (max-width: 768px) {
+  .header {
+    padding: 0;
+  }
+
+  .navbar {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .logo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+}
+
 .logo:hover {
   transform: scale(1.1);
   cursor: pointer;
@@ -73,6 +92,8 @@
 .nav-links li a:hover {
   background-color: var(--accent-primary);
   color: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .theme-toggle {
@@ -92,33 +113,135 @@
 
 .theme-toggle:hover {
   background-color: var(--accent-primary);
+  transform: rotate(360deg);
+  transition: transform 0.5s ease, background-color 0.3s ease;
+}
+
+/* Menu Toggle Button */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1002;
+}
+
+.hamburger {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  transition: all 0.3s ease-in-out;
+}
+
+.hamburger::before {
+  transform: translateY(-8px);
+}
+
+.hamburger::after {
+  transform: translateY(8px);
+}
+
+/* Hamburger Animation */
+.hamburger.open {
+  background: transparent;
+}
+
+.hamburger.open::before {
+  transform: rotate(45deg);
+}
+
+.hamburger.open::after {
+  transform: rotate(-45deg);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .navbar {
-    flex-direction: column;
-    gap: 1rem;
     padding: 1rem;
+  }
+
+  .nav-left {
+    width: auto;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    height: 100vh;
+    background-color: var(--header);
+    padding: 60px 20px 20px;
+    transition: right 0.3s ease-in-out;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-menu.open {
+    right: 0;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
   }
 
   .nav-links {
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
   }
 
-  .nav-left {
+  .nav-links li {
     width: 100%;
-    justify-content: center;
+    text-align: center;
   }
 
-  .nav-right {
+  .nav-links li a {
+    display: block;
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+
+  /* Hide theme-toggle-item on mobile */
+  @media (max-width: 768px) {
+    .theme-toggle-item {
+      margin-top: 1rem;
+    }
+  }
+
+  /* Show theme-toggle-item inline on desktop */
+  @media (min-width: 769px) {
+    .theme-toggle-item {
+      margin: 0;
+    }
+  }
+
+  /* Add overlay when menu is open */
+  .nav-menu.open::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    flex-direction: column;
-  }
-
-  .theme-toggle {
-    margin-top: 1rem;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
   }
 }
