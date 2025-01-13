@@ -3,7 +3,7 @@ import './PageStyles.css'
 import './UserInput.css'
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap';
-import { useNavigate } from 'react-router-dom';
+
 
 function UserInput() {
   const [selectedInterest, setSelectedInterest] = useState('');
@@ -20,6 +20,17 @@ function UserInput() {
     
     // Log the collected data
     console.log('User Profile Data:', userData);
+
+    // Show video
+  setShowVideo(true);
+  // Navigate after delay
+  setTimeout(() => {
+    if (selectedInterest) {
+      // Navigate to "coming soon" for "other", regular roadmap for specific interests
+      const path = selectedInterest === 'other' ? '/roadmap?type=coming-soon' : `/roadmap?type=${selectedInterest}`;
+      navigate(path);
+    }
+  }, 3000);
     
     // You can add API call here later to send data to backend
     alert('Profile submitted successfully!');
