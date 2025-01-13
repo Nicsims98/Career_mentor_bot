@@ -26,6 +26,44 @@ class User(db.Model):
     short_term_career_goals = db.Column(db.Text, nullable=True)
     long_term_career_goals = db.Column(db.Text, nullable=True)
 
+class InternshipListings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    company_name = db.Column(db.String(200), nullable=False)
+    location = db.Column(db.String(200), nullable=True)
+    start_date = db.Column(db.Date, nullable=True)
+    end_date = db.Column(db.Date, nullable=True)
+    duration = db.Column(db.String(100), nullable=True)
+    description = db.Column(db.Text, nullable=True)
+    requirements = db.Column(db.Text, nullable=True)
+    compensation = db.Column(db.String(200), nullable=True)
+    application_deadline = db.Column(db.Date, nullable=True)
+    contact_email = db.Column(db.String(120), nullable=True)
+    industry = db.Column(db.String(100), nullable=True)
+    industry_type = db.Column(db.String(50), nullable=True)  # summer, part-time, full-time
+
+class ChatLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    topic = db.Column(db.String(200), nullable=True)
+    question = db.Column(db.Text, nullable=False)
+    advice = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+
+class Recommendations(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    courses = db.Column(db.Text, nullable=True)  # Store as comma-separated values or JSON
+    companies = db.Column(db.Text, nullable=True)  # Store as comma-separated values or JSON
+    career_paths = db.Column(db.Text, nullable=True)  # Store as comma-separated values or JSON
+
+class Mentorship(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    method_of_contact = db.Column(db.String(100), nullable=False)
+    expertise = db.Column(db.Text, nullable=False)
+    experience = db.Column(db.Text, nullable=False)
+    availability = db.Column(db.Text, nullable=False)
+
 @app.route('/')
 def home():
     return "Career Mentor Bot"
