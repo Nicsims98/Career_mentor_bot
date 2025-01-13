@@ -3,7 +3,6 @@ import './PageStyles.css'
 import './UserInput.css'
 import { useNavigate } from 'react-router-dom';
 import Roadmap from './Roadmap';
-import { useNavigate } from 'react-router-dom';
 
 function UserInput() {
   const [selectedInterest, setSelectedInterest] = useState('');

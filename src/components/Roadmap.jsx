@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 <<<<<<< HEAD
 import './Roadmap.css'
 =======
-import './Roadmap.css';
->>>>>>> 822e295efdd6c3276f8a5a9174aa8ab8a8d16ff0
 
 const Roadmap = ({ type }) => {
   const roadmapData = {
