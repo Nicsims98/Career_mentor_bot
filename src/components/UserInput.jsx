@@ -8,6 +8,22 @@ function UserInput() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Get form data
+    const formData = new FormData(e.target);
+    const userData = Object.fromEntries(formData.entries());
+    
+    // Log the collected data (for now)
+    console.log('User Profile Data:', userData);
+    
+    // You can add API call here later to send data to backend
+    alert('Profile submitted successfully!');
+    
+    // Optionally clear the form
+    e.target.reset();
+  };
+
+  const handleSpinningCat = () => {
     setShowVideo(true);
   };
   return (
@@ -142,6 +158,13 @@ function UserInput() {
 
         <button type="submit" className="submit-btn">Submit</button>
       </form>
+      
+      <button 
+        onClick={handleSpinningCat} 
+        className="spinning-cat-btn"
+      >
+        Spinning Cat
+      </button>
 
       {showVideo && (
         <div className="video-modal-overlay">
