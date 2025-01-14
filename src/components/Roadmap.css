@@ -1,0 +1,213 @@
+.roadmap-container {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    background: transparent;
+}
+
+.roadmap-section {
+    position: relative;
+    padding: 2rem;
+}
+
+.roadmap-section h3 {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--primary-color);
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px var(--shadow-color);
+}
+
+/* Create the road path */
+.cards-container::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 100%;
+    background: linear-gradient(to bottom, #c084fc, #86efac);
+    border-radius: 4px;
+    z-index: 0;
+    opacity: 1;
+}
+
+.cards-container {
+    position: relative;
+    padding: 20px 0;
+}
+
+.card.roadmap-step {
+    width: calc(50% - 30px);
+    margin: 30px 0;
+    position: relative;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 20px;
+    border: 2px solid #007bff;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Position cards alternately */
+.card.roadmap-step:nth-child(odd) {
+    margin-right: 50%;
+    margin-left: auto;
+}
+
+.card.roadmap-step:nth-child(even) {
+    margin-left: 50%;
+}
+
+/* Connect cards to central line */
+.card.roadmap-step::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30px;
+    height: 4px;
+    background: linear-gradient(to right, #c084fc, #ff8fab);
+    opacity: 1;
+}
+
+.card.roadmap-step:nth-child(odd)::before {
+    right: -30px;
+}
+
+.card.roadmap-step:nth-child(even)::before {
+    left: -30px;
+}
+
+/* Step number styling */
+.step-number {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #c084fc, #ff8fab);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 2;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    border: 2px solid white;
+}
+
+.card.roadmap-step:nth-child(odd) .step-number {
+    right: -50px;
+}
+
+.card.roadmap-step:nth-child(even) .step-number {
+    left: -50px;
+}
+
+.step-content {
+    padding: 10px;
+}
+
+.step-link {
+    color: #c084fc;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    transition: all 0.2s ease;
+}
+
+.step-link:hover {
+    color: #ff8fab;
+    transform: translateX(5px);
+}
+
+/* Hover effects */
+.card.roadmap-step:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(192, 132, 252, 0.5);
+    border-color: #ff8fab;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .cards-container::before {
+        left: 30px;
+    }
+
+    .card.roadmap-step {
+        width: calc(100% - 60px);
+        margin: 30px 0 30px 60px !important;
+    }
+
+    .card.roadmap-step::before {
+        left: -30px !important;
+    }
+
+    .step-number {
+        left: -45px !important;
+    }
+}
+
+/* Animation */
+.card.roadmap-step {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger animation */
+.card.roadmap-step:nth-child(1) { animation-delay: 0.1s; }
+.card.roadmap-step:nth-child(2) { animation-delay: 0.2s; }
+.card.roadmap-step:nth-child(3) { animation-delay: 0.3s; }
+.card.roadmap-step:nth-child(4) { animation-delay: 0.4s; }
+.card.roadmap-step:nth-child(5) { animation-delay: 0.5s; }
+.card.roadmap-step:nth-child(6) { animation-delay: 0.6s; }
+.card.roadmap-step:nth-child(7) { animation-delay: 0.7s; }
+.card.roadmap-step:nth-child(8) { animation-delay: 0.8s; }
+.card.roadmap-step:nth-child(9) { animation-delay: 0.9s; }
+.card.roadmap-step:nth-child(10) { animation-delay: 1s; }
+
+/* Add dark mode specific styles */
+[data-theme='dark'] .card.roadmap-step {
+  background: #1f2937;
+  border: 1px solid #374151;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] .card.roadmap-step:hover {
+  border-color: #007bff;
+  background: #2d3748;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+[data-theme='dark'] .step-link {
+  color: #60a5fa;  /* Bright blue that pops against dark background */
+}
+
+[data-theme='dark'] .step-link:hover {
+  color: #93c5fd;
+}
+
+[data-theme='dark'] .roadmap-section h3 {
+  color: #60a5fa;
+  text-shadow: none;  /* Remove text shadow for cleaner look */
+}
+
+[data-theme='dark'] .cards-container::before {
+  opacity: 0.8;  /* Slightly reduce the opacity of the connecting line */
+}

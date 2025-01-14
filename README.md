@@ -3,6 +3,16 @@
 Welcome to the **VSNE Career Mentor Bot** repository! This project was built during the NoSu AI Hackathon by a team of four passionate developers to create an AI-powered career mentor. The bot is designed to guide users toward their ideal career paths, offering tailored roadmaps and resources. 🌟
 
 This is for the 2025 nosu hackathon! A team of four baddies in tech made this project come to life!
+## Tracks we’re going for 
+-	Most Technically impressive - Modal
+-	Beginner track
+-	Best personal project (CodeBuff)
+-	Statsig Grand Prize, Best overall project
+-	Magic Loops
+-	Generative UI/UX 
+-	Nethenoob spinning cat
+-	Bill Zhang Conversational AI Prize
+-	Education and AI
 
 ## Features ✨
 - **Personalized Career Roadmap** 🗺️: A step-by-step guide to achieving your dream career, with actionable steps and course links.
