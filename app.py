@@ -21,6 +21,7 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=True)
     work_type = db.Column(db.String(50), nullable=True)
     location = db.Column(db.String(100), nullable=True)
+    job_preference = db.Column(db.String(100), nullable=True)
     skills = db.Column(db.Text, nullable=True)  # Store as comma-separated values
     interests = db.Column(db.Text, nullable=True)  # Store as comma-separated values
     education = db.Column(db.Text, nullable=True) # Store as comma-separated values
@@ -86,22 +87,29 @@ def add_user():
         existing_user = User.query.filter_by(email=data.get('email')).first()
         if existing_user:
             return jsonify({"error": "User with this email already exists"}), 409
-        if not data:
-            return jsonify({"error": "No data received"}), 400
-        if not data.get('email'):
-            return jsonify({"error": "Email is required"}), 400
+
+        # Convert age to integer if it's provided
+        age = data.get('age')
+        if age and isinstance(age, str):
+            try:
+                age = int(age)
+            except ValueError:
+                return jsonify({"error": "Age must be a number"}), 400
+
+        # Create new user
         new_user = User(
             name=data.get('name'),
             email=data.get('email'),
-            age=data.get('age'),
-            work_type=data.get('workType'),
+            age=age,
             location=data.get('location'),
+            work_type=data.get('workType'),
+            job_preference=data.get('jobPreference'),
             skills=data.get('skills'),
             interests=data.get('interests'),
             education=data.get('education'),
             work_experience=data.get('experience'),
-            short_term_career_goals=data.get('shortTerm'),
-            long_term_career_goals=data.get('longTerm')
+            short_term_career_goals=data.get('shortTermGoals'),
+            long_term_career_goals=data.get('longTermGoals')
         )
         db.session.add(new_user)
         db.session.commit()
@@ -111,20 +119,24 @@ def add_user():
 
 @app.route('/get_users')
 def get_users():
-    users = User.query.all()
-    return jsonify([{
-        'name': user.name,
-        'email': user.email,
-        'age': user.age,
-        'workType': user.work_type,
-        'location': user.location,
-        'skills': user.skills.split(',') if user.skills else [],
-        'interests': user.interests.split(',') if user.interests else [],
-        'education': user.education.split(',') if user.education else [],
-        'experience': user.work_experience.split(',') if user.work_experience else [],
-        'shortTerm': user.short_term_career_goals.split(',') if user.short_term_career_goals else [],
-        'longTerm': user.long_term_career_goals.split(',') if user.long_term_career_goals else []
-    } for user in users])
+    try:
+        users = User.query.all()
+        return jsonify([{
+            'name': user.name,
+            'email': user.email,
+            'age': user.age,
+            'location': user.location,
+            'workType': user.work_type,
+            'jobPreference': user.job_preference,
+            'skills': user.skills,
+            'interests': user.interests,
+            'education': user.education,
+            'experience': user.work_experience,
+            'shortTermGoals': user.short_term_career_goals,
+            'longTermGoals': user.long_term_career_goals
+        } for user in users])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     with app.app_context():

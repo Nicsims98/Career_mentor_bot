@@ -21,8 +21,43 @@ function UserInput() {
     // Log the collected data
     console.log('User Profile Data:', userData);
 
-    // Show video
-    setShowVideo(true);
+    // Send data to backend
+    fetch('http://localhost:5000/userinput', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+      alert('Profile submitted successfully!');
+      
+      // Show video
+      setShowVideo(true);
+      
+      // Navigate after delay
+      setTimeout(() => {
+        if (selectedInterest) {
+          const path = selectedInterest === 'other' ? '/roadmap?type=coming-soon' : `/roadmap?type=${selectedInterest}`;
+          navigate(path);
+        }
+      }, 3000);
+      
+      // Clear the form
+      e.target.reset();
+      setSelectedInterest('');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('Error submitting profile. Please try again.');
+    });
     // Navigate after delay
     setTimeout(() => {
       if (selectedInterest) {
