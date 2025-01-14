@@ -1,0 +1,55 @@
+Testing Guide for Career Mentor Bot
+
+1. Start the Backend (Flask Server)
+   - Open a terminal
+   - Navigate to project root directory
+   - Run: `python app.py`
+   - Should see: "Running on http://127.0.0.1:5173"
+   - Keep this terminal running
+
+2. Start the Frontend (Vite Server)
+   - Open a new terminal
+   - Navigate to project root directory
+   - Run: `npm run dev`
+   - Should see a URL like: "Local: http://localhost:5173/"
+   - Keep this terminal running
+
+3. Test the Form Submission
+   - Open browser to http://localhost:5173/userinput
+   - Open browser's Developer Tools (F12 or right-click -> Inspect)
+   - Go to Console tab to monitor for errors
+   - Fill out the form with test data:
+     * Email (required): test@example.com
+     * Name: Test User
+     * Age: 25
+     * Work Type: remote/hybrid/onsite
+     * Fill other fields as desired
+   - Click Submit
+   - Check Console for any error messages
+   - Check Flask terminal for incoming request logs
+
+4. Common Issues & Solutions
+   a. "Failed to submit form" error:
+      - Check both servers are running
+      - Verify Flask server shows debug output when form is submitted
+      - Check browser console for specific error message
+      - Ensure email field is filled (it's required)
+   
+   b. CORS errors:
+      - Verify CORS settings in app.py match your frontend URL
+      - Both http://localhost:5173 and http://127.0.0.1:5173 should be allowed
+
+   c. Database errors:
+      - Check if database.db exists in project root
+      - If not, stop Flask server and delete database.db
+      - Restart Flask server (it will create a new database)
+
+5. Verify Data Storage
+   - After successful submission, check database:
+     * Visit: http://localhost:5173/get_users
+     * Should see JSON array of all submitted users
+
+Debug Tips:
+- Frontend logs are in browser console
+- Backend logs are in Flask terminal
+- Database is SQLite file: database.db

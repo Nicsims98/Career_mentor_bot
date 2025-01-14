@@ -34,6 +34,7 @@
   --card-bg: var(--dark-card-bg);
   --card-text: var(--dark-card-text);
   --accent: var(--dark-accent);
+<<<<<<< Updated upstream
 
   --primary-color: #007bff;
   --accent-color: #0056b3;
@@ -49,6 +50,8 @@
   --card-background: #1f2937;   /* Slightly lighter than background */
   --text-color: #f3f4f6;       /* Off-white for better eye comfort */
   --shadow-color: rgba(0, 0, 0, 0.2);
+=======
+>>>>>>> Stashed changes
 }
 
 /* Light theme class */

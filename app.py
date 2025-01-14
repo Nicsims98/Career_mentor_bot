@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 import os
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5000", "http://127.0.0.1:5000"]}})
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -68,22 +70,38 @@ class Mentorship(db.Model):
 def home():
     return "Career Mentor Bot"
 
-@app.route('/add_user', methods=['POST'])
+@app.route('/userinput', methods=['POST'])
 def add_user():
     try:
-        data = request.form
+        data = request.get_json()
+        print("Received data:", data)  # Debug log
+        
+        # Validate required fields
+        if not data:
+            return jsonify({"error": "No data received"}), 400
+        if not data.get('email'):
+            return jsonify({"error": "Email is required"}), 400
+            
+        # Check if user already exists
+        existing_user = User.query.filter_by(email=data.get('email')).first()
+        if existing_user:
+            return jsonify({"error": "User with this email already exists"}), 409
+        if not data:
+            return jsonify({"error": "No data received"}), 400
+        if not data.get('email'):
+            return jsonify({"error": "Email is required"}), 400
         new_user = User(
             name=data.get('name'),
             email=data.get('email'),
             age=data.get('age'),
-            work_type=data.get('work_type'),
+            work_type=data.get('workType'),
             location=data.get('location'),
             skills=data.get('skills'),
             interests=data.get('interests'),
             education=data.get('education'),
-            work_experience=data.get('work_experience'),
-            short_term_career_goals=data.get('short_term_career_goals'),
-            long_term_career_goals=data.get('long_term_career_goals')
+            work_experience=data.get('experience'),
+            short_term_career_goals=data.get('shortTerm'),
+            long_term_career_goals=data.get('longTerm')
         )
         db.session.add(new_user)
         db.session.commit()
@@ -98,18 +116,17 @@ def get_users():
         'name': user.name,
         'email': user.email,
         'age': user.age,
-        'work_type': user.work_type,
+        'workType': user.work_type,
         'location': user.location,
         'skills': user.skills.split(',') if user.skills else [],
         'interests': user.interests.split(',') if user.interests else [],
         'education': user.education.split(',') if user.education else [],
-        'work_experience': user.work_experience.split(',') if user.work_experience else [],
-        'short_term_career_goals': user.short_term_career_goals.split(',') if user.short_term_career_goals else [],
-        'long_term_career_goals': user.long_term_career_goals.split(',') if user.long_term_career_goals else []
+        'experience': user.work_experience.split(',') if user.work_experience else [],
+        'shortTerm': user.short_term_career_goals.split(',') if user.short_term_career_goals else [],
+        'longTerm': user.long_term_career_goals.split(',') if user.long_term_career_goals else []
     } for user in users])
-
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
