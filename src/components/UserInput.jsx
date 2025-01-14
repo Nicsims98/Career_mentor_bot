@@ -75,6 +75,16 @@ function UserInput() {
               required 
             />
           </div>
+          <div className="form-group">
+            <label htmlFor="location">Location</label>
+            <input 
+              type="text" 
+              id="location" 
+              name="location" 
+              placeholder="Enter your city/country"
+              required 
+            />
+          </div>
         </div>
 
         <div className="form-section">
@@ -137,6 +147,50 @@ function UserInput() {
                 className="other-interest-input"
               />
             )}
+          </div>
+        </div>
+
+        <div className="form-section">
+          <h3>Education & Experience</h3>
+          <div className="form-group">
+            <label htmlFor="education">Education</label>
+            <textarea 
+              id="education" 
+              name="education" 
+              placeholder="Enter your educational background (e.g., degree, major, institution)"
+              rows="3"
+            ></textarea>
+          </div>
+          <div className="form-group">
+            <label htmlFor="experience">Work Experience</label>
+            <textarea 
+              id="experience" 
+              name="experience" 
+              placeholder="Enter your relevant work experience"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+
+        <div className="form-section">
+          <h3>Career Goals</h3>
+          <div className="form-group">
+            <label htmlFor="shortTermGoals">Short-term Goals (1-2 years)</label>
+            <textarea 
+              id="shortTermGoals" 
+              name="shortTermGoals" 
+              placeholder="What do you want to achieve in the next 1-2 years?"
+              rows="3"
+            ></textarea>
+          </div>
+          <div className="form-group">
+            <label htmlFor="longTermGoals">Long-term Goals (3-5 years)</label>
+            <textarea 
+              id="longTermGoals" 
+              name="longTermGoals" 
+              placeholder="Where do you see yourself in 3-5 years?"
+              rows="3"
+            ></textarea>
           </div>
         </div>
 
