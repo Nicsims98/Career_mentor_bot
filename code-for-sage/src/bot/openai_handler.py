@@ -21,14 +21,14 @@ class SageAI:
         # Securely get API key from environment
         self.api_key = os.getenv('OPENAI_API_KEY')
         if not self.api_key:
-            raise ValueError("OPENAI_API_KEY environment variable is not set")
+            raise ValueError("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.")
         
         try:
             self.client = OpenAI(api_key=self.api_key)
             # Test the API key with a minimal request
             self.client.models.list()
         except AuthenticationError:
-            raise ValueError("Invalid OpenAI API key")
+            raise ValueError("Invalid OpenAI API key. Please check your API key configuration.")
         except RateLimitError:
             raise ValueError("OpenAI API key has exceeded its quota or rate limit")
         except Exception as e:

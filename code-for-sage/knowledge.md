@@ -128,9 +128,25 @@ Common Issues:
   - Keep consistent table names in ForeignKey references
 
 ## Server Configuration
-- Backend runs on port 5000 (Flask backend in code-for-sage/src/app.py)
-- Frontend runs on port 5173 (React frontend served by Vite)
-- Configure CORS in app.py to allow frontend origin
+- Development:
+  - Backend runs on port 5000 (Flask backend in code-for-sage/src/app.py)
+  - Frontend runs on port 5173 (React frontend served by Vite)
+  - Configure CORS in app.py to allow frontend origin
+
+## Deployment Configuration
+- Backend URL: Find in Vercel dashboard under project's "Domains" section
+- Environment Variables:
+  - Set in Vercel dashboard (Settings > Environment Variables)
+  - Required: OPENAI_API_KEY, VITE_API_URL
+  - VITE_API_URL should be your Vercel backend domain + "/api/sage/chat"
+  - For Vercel deployment: Set in Vercel dashboard (Settings > Environment Variables)
+  - For other deployments: Set in platform's environment configuration
+  - Default to gpt-3.5-turbo model unless GPT-4 access confirmed
+  - Test API key access before deploying
+  - Monitor API usage at platform.openai.com/account/usage
+  - Set up billing at platform.openai.com/account/billing
+  - Free tier credits expire after 3 months
+  - Handle quota errors by directing users to billing page
 
 ## CORS Configuration
 - Keep OPTIONS method in CORS configuration
@@ -154,6 +170,8 @@ Required environment variables in `.env`:
   - Free tier includes $5 credit
   - Rate limits apply
   - Keep secure, never commit to repo
+  - For Vercel deployment: Set in Vercel dashboard (Settings > Environment Variables)
+  - For other deployments: Set in platform's environment configuration
   - Default to gpt-3.5-turbo model unless GPT-4 access confirmed
   - Test API key access before deploying
   - Monitor API usage at platform.openai.com/account/usage

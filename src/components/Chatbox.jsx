@@ -36,7 +36,7 @@ function Chatbox() {
     setIsLoading(true);
 
     try {
-        const response = await fetch('http://localhost:5000/api/sage/chat', {
+        const response = await fetch(import.meta.env.VITE_API_URL || 'http://localhost:5000/api/sage/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,7 +46,9 @@ function Chatbox() {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Server error occurred');
+            const errorMessage = errorData.error || 'Server error occurred';
+            console.error('Chat API error:', errorMessage);
+            throw new Error(errorMessage);
         }
 
         const data = await response.json();
@@ -59,8 +61,19 @@ function Chatbox() {
 
     } catch (error) {
         console.error('Chat error:', error);
+        let errorMessage = error.message;
+        
+        // Provide more user-friendly error messages
+        if (errorMessage.includes('OpenAI API key not configured')) {
+            errorMessage = 'The AI service is not properly configured. Please contact support.';
+        } else if (errorMessage.includes('Invalid OpenAI API key')) {
+            errorMessage = 'There is an authentication issue with the AI service. Please contact support.';
+        } else if (error.message === 'Failed to fetch') {
+            errorMessage = 'Unable to connect to the chat service. Please check your internet connection or try again later.';
+        }
+        
         setMessages(prev => [...prev, { 
-            text: `Error: ${error.message}`, 
+            text: errorMessage,
             sender: 'sage' 
         }]);
     } finally {
