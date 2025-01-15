@@ -1,0 +1,40 @@
+.page-container {
+  padding: 120px 2rem 2rem;  /* Added extra top padding to move content down */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 45px 1rem 1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+}
+
+.page-content {
+  max-width: 1200px;
+  width: 100%;
+}
+
+h2 {
+  font-size: 2.5rem;  /* Large heading size */
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+p {
+  font-size: 1.2rem;  /* Larger text size */
+  line-height: 1.6;
+  color: #fff;
+}
