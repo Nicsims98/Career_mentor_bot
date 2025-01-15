@@ -3,7 +3,7 @@ OpenAI integration for Sage career mentor bot.
 Handles all interactions with the OpenAI API securely.
 """
 
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError, RateLimitError
 from dotenv import load_dotenv
 import os
 import time
@@ -19,12 +19,26 @@ load_dotenv()
 class SageAI:
     def __init__(self):
         # Securely get API key from environment
-        api_key = os.getenv('OPENAI_API_KEY')
-        if not api_key:
+        self.api_key = os.getenv('OPENAI_API_KEY')
+        if not self.api_key:
             raise ValueError("OPENAI_API_KEY environment variable is not set")
-        self.client = OpenAI(api_key=api_key)
-        self.model = "gpt-4"
-        self.personality = SAGE_PERSONALITY
+        
+        try:
+            self.client = OpenAI(api_key=self.api_key)
+            # Test the API key with a minimal request
+            self.client.models.list()
+        except AuthenticationError:
+            raise ValueError("Invalid OpenAI API key")
+        except RateLimitError:
+            raise ValueError("OpenAI API key has exceeded its quota or rate limit")
+        except Exception as e:
+            raise ValueError(f"Error initializing OpenAI client: {str(e)}")
+            
+        self.model = "gpt-3.5-turbo"  # Using GPT-3.5-turbo as default model
+        
+        # Set a simple personality string for now
+        self.personality = "You are Sage, a helpful career mentor chatbot. Provide friendly and professional responses to help users with their career-related questions."
+        
         self.conversation_history = []
         self.last_api_call = 0
         self.min_time_between_calls = 1  # Minimum seconds between API calls
@@ -46,296 +60,70 @@ class SageAI:
 
     def _handle_api_error(self, error: Exception) -> str:
         """Handle different types of API errors"""
-        if "Rate limit" in str(error):
-            return self.personality['error_messages']['rate_limit']
-        elif "Invalid API key" in str(error):
-            return self.personality['error_messages']['api_error']
+        if isinstance(error, RateLimitError):
+            return "The OpenAI API key has exceeded its quota. Please check your billing details at https://platform.openai.com/account/billing"
+        elif isinstance(error, AuthenticationError):
+            return "Invalid OpenAI API key. Please check your API key configuration."
+        elif "insufficient_quota" in str(error):
+            return "Your OpenAI API key has run out of credits. Please check your billing details at https://platform.openai.com/account/billing"
         else:
-            return f"I apologize, but I encountered an error: {str(error)}"
+            return f"An error occurred while processing your request: {str(error)}"
 
-    def _update_conversation_history(
-        self,
-        role: str,
-        content: str,
-        max_history: int = 10
-    ):
-        """Maintain conversation history"""
-        # Add new message
-        self.conversation_history.append({
-            'role': role,
-            'content': content,
-            'timestamp': time.time()
-        })
-        
-        # Keep only recent messages, but ensure system messages are preserved
-        if len(self.conversation_history) > max_history:
-            system_messages = [msg for msg in self.conversation_history if msg['role'] == 'system']
-            other_messages = [msg for msg in self.conversation_history if msg['role'] != 'system'][-max_history:]
-            self.conversation_history = system_messages + other_messages
-        
-    def create_base_prompt(self):
-        """Creates the base personality prompt for Sage"""
-        return f"""You are {self.personality['name']}, a career mentor with expertise in tech and professional development.
-        Your communication style is {self.personality['traits']['communication_style']}.
-        Always maintain a supportive and encouraging tone while providing specific, actionable advice."""
-
-    def create_specialized_prompt(self, prompt_type, user_input, user_context=None):
-        """Creates specialized prompts based on the type of career guidance needed"""
-        base_prompt = self.create_base_prompt()
-        
-        prompts = {
-            'skill_analysis': f"""
-                {base_prompt}
-                
-                Analyze the following skills and provide:
-                1. Current market demand for each skill
-                2. Complementary skills to learn
-                3. Specific learning resources
-                4. Potential career paths
-                
-                User's skills: {user_input}
-                Context: {user_context if user_context else 'No previous context'}
-                
-                Format your response with emojis and clear sections.
-            """,
-            
-            'career_path': f"""
-                {base_prompt}
-                
-                Based on the user's interests and background, suggest career paths:
-                1. 3-5 relevant job titles with descriptions
-                2. Required skills for each role
-                3. Typical career progression
-                4. Salary ranges (entry to senior level)
-                5. Learning roadmap
-                
-                User's background: {user_input}
-                Context: {user_context if user_context else 'No previous context'}
-                
-                Use bullet points and emojis for clarity.
-            """,
-            
-            'course_recommendation': f"""
-                {base_prompt}
-                
-                Recommend learning resources based on the user's goals:
-                1. Top 3 most relevant courses/certifications
-                2. Why each resource is recommended
-                3. Estimated time commitment
-                4. Prerequisites if any
-                5. Expected outcomes
-                
-                User's learning goals: {user_input}
-                Context: {user_context if user_context else 'No previous context'}
-                
-                Format with clear sections and encouraging language.
-            """,
-            
-            'interview_prep': f"""
-                {base_prompt}
-                
-                Provide interview preparation guidance:
-                1. Common interview questions for the role
-                2. How to structure responses (STAR method)
-                3. Technical concepts to review
-                4. Questions to ask the interviewer
-                5. Preparation tips
-                
-                Role interested in: {user_input}
-                Context: {user_context if user_context else 'No previous context'}
-                
-                Include examples and confidence-building tips.
-            """,
-            
-            'resume_advice': f"""
-                {base_prompt}
-                
-                Provide resume optimization advice:
-                1. Key skills to highlight
-                2. Action verbs to use
-                3. Industry-specific tips
-                4. Common mistakes to avoid
-                5. ATS optimization suggestions
-                
-                Current role/target role: {user_input}
-                Context: {user_context if user_context else 'No previous context'}
-                
-                Include specific examples and formatting tips.
-            """,
-            
-            'industry_insights': f"""
-                {base_prompt}
-                
-                Provide current industry insights:
-                1. Latest trends and technologies
-                2. Growing areas of opportunity
-                3. Required skills for future success
-                4. Industry challenges and solutions
-                5. Notable companies and their focus areas
-                
-                Industry of interest: {user_input}
-                Context: {user_context if user_context else 'No previous context'}
-                
-                Include recent developments and future predictions.
-            """,
-            
-            'learning_schedule': f"""
-                {base_prompt}
-                
-                Create a personalized learning schedule considering:
-                1. Available time: {user_input} hours per week
-                2. Current commitments: {user_context if user_context else 'No commitments specified'}
-                3. Learning style preferences
-                4. Energy levels throughout the day
-                5. Optimal study patterns
-                
-                Provide:
-                - Detailed weekly schedule
-                - Study session recommendations
-                - Break patterns
-                - Progress tracking suggestions
-                
-                Format with clear sections and time blocks.
-            """,
-            
-            'course_pacing': f"""
-                {base_prompt}
-                
-                Analyze this learning scenario:
-                User Input: {user_input}
-                Context: {user_context if user_context else 'No additional context'}
-                
-                Provide:
-                1. Recommended pacing for the course
-                2. Time allocation per week
-                3. Milestones to track progress
-                4. Adjustments for different learning speeds
-                
-                Use clear sections and encouraging language.
-            """
-        }
-        
-        return prompts.get(prompt_type, base_prompt)
-
-    async def get_quick_response(
-        self,
-        user_input: str,
-        context: Optional[str] = None
-    ) -> Dict:
+    def chat(self, user_message: str) -> str:
         """
-        Get a quick response for simple questions
+        Send a message to OpenAI API and get a response
         """
         try:
+            print(f"Attempting to send message: {user_message}")  # Debug log
             self._rate_limit_check()
             
-            prompt = f"""
-            {self.create_base_prompt()}
+            # Add message to conversation history
+            self.conversation_history.append({"role": "user", "content": user_message})
             
-            Provide a concise, helpful response to:
-            {user_input}
+            # Ensure personality is a string
+            system_message = str(self.personality) if isinstance(self.personality, dict) else self.personality
             
-            Context (if any): {context if context else 'No additional context'}
-            
-            Keep the response brief but informative.
-            """
-            
-            completion = self.client.chat.completions.create(
-                model=self.model,
-                store=True,
-                messages=[
-                    {"role": "system", "content": prompt},
-                    {"role": "user", "content": user_input}
-                ]
-            )
-            
-            response = completion.choices[0].message.content
-            
-            # Update conversation history
-            self._update_conversation_history('user', user_input)
-            self._update_conversation_history('assistant', response)
-            
-            return {
-                'success': True,
-                'response': response,
-                'context_preserved': True
-            }
-            
-        except Exception as e:
-            error_message = self._handle_api_error(e)
-            return {
-                'success': False,
-                'error': error_message,
-                'context_preserved': False
-            }
-
-    async def get_career_advice(
-        self,
-        prompt_type: str,
-        user_input: str,
-        context: Optional[str] = None,
-        user_id: Optional[str] = None,
-        ip: Optional[str] = None
-    ) -> Dict:
-        """Get specialized career advice from OpenAI"""
-        try:
-            self._rate_limit_check()
-            
-            prompt = self.create_specialized_prompt(prompt_type, user_input, context)
-            
-            # Include relevant conversation history
+            # Create messages array with personality prompt and conversation history
             messages = [
-                {"role": "system", "content": prompt},
-                {"role": "user", "content": user_input}
-            ]
+                {"role": "system", "content": system_message}
+            ] + self.conversation_history
             
-            # Add recent relevant history if available
-            relevant_history = self._get_relevant_history(prompt_type)
-            if relevant_history:
-                messages[0]["content"] += f"\nRelevant context: {relevant_history}"
+            print(f"Sending messages to OpenAI: {messages}")  # Debug log
             
-            completion = self.client.chat.completions.create(
-                model=self.model,
-                store=True,
-                messages=messages
-            )
-            
-            response = completion.choices[0].message.content
-            
-            # Update conversation history
-            self._update_conversation_history('user', user_input)
-            self._update_conversation_history('assistant', response)
-            
-            return response
-            
+            try:
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=0.7,
+                    max_tokens=1000
+                )
+                
+                # Get the response content
+                assistant_message = response.choices[0].message.content
+                print(f"Received response: {assistant_message}")  # Debug log
+                
+                # Add assistant's response to history
+                self.conversation_history.append({"role": "assistant", "content": assistant_message})
+                
+                return assistant_message
+                
+            except Exception as api_error:
+                print(f"API Error Details: {str(api_error)}")  # Add detailed logging
+                raise api_error
+                
         except Exception as e:
+            print(f"Full error details: {str(e)}")  # Add detailed logging
             return self._handle_api_error(e)
 
-    def _get_relevant_history(self, prompt_type: str) -> Optional[str]:
-        """Get relevant conversation history for context"""
-        relevant_messages = []
-        
-        for msg in reversed(self.conversation_history[-5:]):  # Look at last 5 messages
-            if prompt_type.lower() in msg['content'].lower():
-                relevant_messages.append(f"{msg['role']}: {msg['content']}")
-                
-        return "\n".join(relevant_messages) if relevant_messages else None
-
-    def get_conversation_summary(self) -> Dict:
-        """Get a summary of the conversation history"""
-        return {
-            'message_count': len(self.conversation_history),
-            'topics_discussed': self._extract_topics(),
-            'last_interaction': self.conversation_history[-1] if self.conversation_history else None
-        }
-
-    def _extract_topics(self) -> List[str]:
-        """Extract main topics from conversation history"""
-        topics = set()
-        for msg in self.conversation_history:
-            if 'career' in msg['content'].lower():
-                topics.add('career guidance')
-            if 'course' in msg['content'].lower():
-                topics.add('course recommendations')
-            if 'skill' in msg['content'].lower():
-                topics.add('skill assessment')
-        return list(topics)
+    def verify_connection(self) -> bool:
+        """
+        Verify that the connection to OpenAI API is working
+        """
+        try:
+            # Test the API key with a minimal request
+            models = self.client.models.list()
+            print(f"Successfully connected to OpenAI API. Available models: {[model.id for model in models]}")
+            return True
+        except Exception as e:
+            print(f"Connection test failed: {str(e)}")
+            return False

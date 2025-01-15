@@ -2,22 +2,29 @@
 User model for Sage
 """
 
-from sqlalchemy import Column, Integer, String, DateTime
+from src.database import db
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from .base import Base
 
-class User(Base):
+class User(db.Model):
     """User model"""
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
-    username = Column(String(50), unique=True, nullable=False)
-    email = Column(String(120), unique=True, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    age = db.Column(db.Integer, nullable=True)
+    work_type = db.Column(db.String(50), nullable=True)
+    location = db.Column(db.String(100), nullable=True)
+    job_preference = db.Column(db.String(100), nullable=True)
+    skills = db.Column(db.Text, nullable=True)  # Store as comma-separated values
+    interests = db.Column(db.Text, nullable=True)  # Store as comma-separated values
+    education = db.Column(db.Text, nullable=True) # Store as comma-separated values
+    work_experience = db.Column(db.Text, nullable=True) # Store as comma-separated values
+    short_term_career_goals = db.Column(db.Text, nullable=True)
+    long_term_career_goals = db.Column(db.Text, nullable=True)
 
-    # Relationship to chat history
+    # Add the relationship to ChatHistory
     chat_history = relationship("ChatHistory", back_populates="user")
 
     def __repr__(self):
-        return f"<User(username={self.username}, email={self.email})>"
+        return f"<User(username={self.email})>"

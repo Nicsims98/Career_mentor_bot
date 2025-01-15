@@ -26,45 +26,46 @@ function Chatbox() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (newMessage.trim()) {
-      // Add user message immediately
-      setMessages(prev => [...prev, { text: newMessage, sender: 'user' }]);
-      setIsLoading(true);
-      
-      try {
+    if (!newMessage.trim()) return;
+
+    // Add user message immediately
+    setMessages(prev => [...prev, { 
+        text: newMessage, 
+        sender: 'user' 
+    }]);
+    setIsLoading(true);
+
+    try {
         const response = await fetch('http://localhost:5000/api/sage/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: newMessage,
-            type: 'general'
-          }),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: newMessage }),
         });
-        
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Server error occurred');
         }
 
         const data = await response.json();
         
         // Add Sage's response
         setMessages(prev => [...prev, { 
-          text: data.response, 
-          sender: 'sage' 
+            text: data.response, 
+            sender: 'sage' 
         }]);
-      } catch (error) {
-        console.error('Error:', error);
+
+    } catch (error) {
+        console.error('Chat error:', error);
         setMessages(prev => [...prev, { 
-          text: "I apologize, but I'm having trouble responding right now. Please try again later.", 
-          sender: 'sage' 
+            text: `Error: ${error.message}`, 
+            sender: 'sage' 
         }]);
-      } finally {
+    } finally {
         setIsLoading(false);
         setNewMessage('');
-      }
     }
   };
 

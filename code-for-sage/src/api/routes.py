@@ -10,9 +10,11 @@ from src.bot.integrations.linkedin_handler import LinkedInDataHandler
 from src.config import Config
 from src.bot.safety_checker import SafetyChecker
 from src.models.chat_history import ChatHistory
-from flask_sqlalchemy import SQLAlchemy
+from flask import current_app
+from src.database import db
 
-db = SQLAlchemy()
+# Initialize services
+sage_ai = SageAI()
 safety_checker = SafetyChecker()
 
 # Create blueprint for all Sage routes
@@ -32,7 +34,6 @@ async def chat():
         current_app.logger.info(f"Request data: {data}")
         
         message = data.get('message')
-        chat_type = data.get('type', 'general')
         
         if not message:
             return jsonify({
@@ -57,12 +58,7 @@ async def chat():
         # Get AI response
         current_app.logger.info("Calling OpenAI API...")
         try:
-            response = await sage_ai.get_career_advice(
-                chat_type, 
-                message,
-                user_id=user_id,
-                ip=ip
-            )
+            response = sage_ai.chat(message)
             current_app.logger.info("Got response from OpenAI")
         except Exception as e:
             current_app.logger.error(f"OpenAI API error: {str(e)}")
@@ -73,25 +69,19 @@ async def chat():
             user_id=user_id,
             message=message,
             response=response,
-            prompt_type=chat_type
+            prompt_type='general'
         )
         db.session.add(chat_history)
         db.session.commit()
         
         return jsonify({
-            'response': response,
-            'type': chat_type
+            'response': response
         })
-    except ValueError as e:
-        return jsonify({
-            'error': str(e),
-            'code': Config.ERROR_CODES['INVALID_INPUT'],
-            'message': Config.ERROR_MESSAGES[Config.ERROR_CODES['INVALID_INPUT']]
-        }), 400
+        
     except Exception as e:
         current_app.logger.error(f"Error in chat endpoint: {str(e)}")
         return jsonify({
             'error': str(e),
             'code': Config.ERROR_CODES['API_ERROR'],
             'message': Config.ERROR_MESSAGES[Config.ERROR_CODES['API_ERROR']]
-        }), 500
+        }), 500
