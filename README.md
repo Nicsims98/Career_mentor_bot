@@ -14,6 +14,9 @@ This is for the 2025 nosu hackathon! A team of four baddies in tech made this pr
 -	Bill Zhang Conversational AI Prize
 -	Education and AI
 
+### **Deployed** ▶️
+- https://vsne-career-mentor-bot.vercel.app/
+
 ## Features ✨
 - **Personalized Career Roadmap** 🗺️: A step-by-step guide to achieving your dream career, with actionable steps and course links.
 - **Interactive Chat with Sage** 💬: Get advice and insights from Sage, our AI-powered chat assistant.
