@@ -47,8 +47,75 @@ This is for the 2025 nosu hackathon! A team of four baddies in tech made this pr
 - **Additional Tools:** HTML, CSS, JavaScript
 
 ### **Hosting** ▶️
-- Frontend: Netlify or Vercel for React app.
-- Backend: Render or Heroku for Flask/Node.js API.
+- Frontend: Vercel for React app.
+- Backend: Vercel for Flask API.
+
+### How to run it locally
+
+1. Clone the repository
+```
+git clone https://github.com/Nicsims98/Career_mentor_bot.git
+ ```
+2. Change directory to the project folder
+```
+cd Career_mentor_bot
+```
+
+NOTE:  Make sure to do this for both the frontend and backend terminal first before the other commands.
+
+##**For the backend**
+
+1. Inside the Career_mentor_bot directory, go to code-for-sage folder, and then src folder.
+```bash
+cd code-for-sage
+```
+
+2. Create a virtual environment in a terminal:
+```bash
+python -m venv venv
+source venv/bin/activate  # on Mac/Linux 
+ venv\Scripts\activate # on windows
+```
+
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Set up environment variables (create a .env file)
+```
+echo "FLASK_ENV=development">.env
+echo "DATABASE_URL=sqlite:///sage.db">>.env
+```
+
+5. Initialize the database
+```
+flask db init
+flask db migrate
+flask db upgrade
+```
+
+6. Run the Flask application
+```
+python app.py
+```
+
+##**For the frontend**
+In another terminal,
+
+1. Install dependencies(node.js)
+```
+npm install 
+ ```
+2. Run the front end
+```
+npm run dev
+```
+3. The project should run on
+```
+http://localhost:5173
+```
+
 
 ## Future Improvements 🚧
 1. **Advanced AI Capabilities**:
@@ -74,64 +141,3 @@ This is for the 2025 nosu hackathon! A team of four baddies in tech made this pr
 ---
 
 Thank you for checking out the VSNE Career Mentor Bot! 🌈 If you have any questions or feedback, please feel free to reach out. Let’s help you take the next step in your career journey! 💼✨
-# Sage Career Mentor Bot - AI Component
-
-AI-powered career guidance and learning path recommendation system.
-
-## Setup
-
-1. Clone the repository
-2. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-4. Set up environment variables:
-```bash
-cp .env.example .env
-# Edit .env with your actual values
-```
-
-5. Run the development server:
-```bash
-flask run
-```
-
-## API Endpoints
-
-### Chat Endpoint
-POST `/api/sage/chat`
-```json
-{
-    "message": "What career path should I take?",
-    "type": "career_path"
-}
-```
-
-### Course Recommendations
-POST `/api/sage/recommend-courses`
-```json
-{
-    "skills": ["python", "javascript"],
-    "career_goal": "Full Stack Developer",
-    "available_hours": 10,
-    "learning_pace": "moderate"
-}
-```
-
-## Development
-
-### Running Tests
-```bash
-pytest
-```
-
-### Code Style
-```bash
-flake8 src tests
