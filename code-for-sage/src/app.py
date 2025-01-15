@@ -14,6 +14,10 @@ import os
 from src.bot.integrations.linkedin_handler import LinkedInDataHandler
 from src.bot.performance_monitor import PerformanceMonitor
 from src.bot.market_insights import MarketInsights
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 class SageApp:
     def __init__(self):

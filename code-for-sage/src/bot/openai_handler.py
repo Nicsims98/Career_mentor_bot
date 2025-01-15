@@ -18,7 +18,7 @@ load_dotenv()
 
 class SageAI:
     def __init__(self):
-        # Securely get API key from environment
+        # This is already the correct way to access env variables in Python
         self.api_key = os.getenv('OPENAI_API_KEY')
         if not self.api_key:
             raise ValueError("OPENAI_API_KEY environment variable is not set")
